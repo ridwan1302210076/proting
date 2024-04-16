@@ -39,6 +39,26 @@ exports.getIncomes = async (req, res) => {
   }
 };
 
+exports.getIncomeByMonth = async (req, res) => {
+  try {
+    const { month } = req.params; // get month from parameters
+
+    const incomes = await IncomeSchema.aggregate([
+      {
+        $project: {
+          month: { $month: "$date" },
+          data: "$$ROOT",
+        },
+      },
+      { $match: { month: parseInt(month) } },
+    ]).sort({ "data.date": -1 });
+
+    res.status(200).json(incomes.map((income) => income.data));
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 exports.deleteIncome = async (req, res) => {
   const { id } = req.params;
   IncomeSchema.findByIdAndDelete(id)
