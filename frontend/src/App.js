@@ -1,66 +1,34 @@
-import React, { useState, useMemo } from "react";
-import styled from "styled-components";
-import bg from "./img/bg.png";
-import { MainLayout } from "./styles/Layouts";
-import Orb from "./Components/Orb/Orb";
-import Navigation from "./Components/Navigation/Navigation";
-import Dashboard from "./Components/Dashboard/Dashboard";
-import Income from "./Components/Income/Income";
-import Expenses from "./Components/Expenses/Expenses";
-import { useGlobalContext } from "./context/globalContext";
-import ViewTransactions from "./Components/Dashboard/ViewTransactions";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from "react";
+import { GlobalProvider } from "./context/globalContext";
+import { GlobalStyle } from "./styles/GlobalStyle";
+import Login from "./Components/login";
+import Signup from "./Components/sigup";
+import Home from "./Components/home";
 
 function App() {
-  const [active, setActive] = useState(1);
-
-  const global = useGlobalContext();
-  console.log(global);
-
-  const displayData = () => {
-    switch (active) {
-      case 1:
-        return <Dashboard />;
-      case 2:
-        return <ViewTransactions />;
-      case 3:
-        return <Income />;
-      case 4:
-        return <Expenses />;
-      default:
-        return <Dashboard />;
-    }
-  };
-
-  const orbMemo = useMemo(() => {
-    return <Orb />;
-  }, []);
-
   return (
-    <AppStyled bg={bg} className="App">
-      {orbMemo}
-      <MainLayout>
-        <Navigation active={active} setActive={setActive} />
-        <main>{displayData()}</main>
-      </MainLayout>
-    </AppStyled>
+    <div className="App">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/home"
+            element={
+              <>
+                <GlobalStyle />
+                <GlobalProvider>
+                  <Home />
+                </GlobalProvider>
+              </>
+            }
+          />
+        </Routes>
+      </Router>
+    </div>
   );
 }
-
-const AppStyled = styled.div`
-  height: 100vh;
-  background-image: url(${(props) => props.bg});
-  position: relative;
-  main {
-    flex: 1;
-    background: rgba(252, 246, 249, 0.78);
-    border: 3px solid #ffffff;
-    backdrop-filter: blur(4.5px);
-    border-radius: 32px;
-    overflow-x: hidden;
-    &::-webkit-scrollbar {
-      width: 0;
-    }
-  }
-`;
-
 export default App;
+

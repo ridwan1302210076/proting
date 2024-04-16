@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useGlobalContext } from "../../context/globalContext";
 
@@ -14,16 +14,22 @@ function ViewTransactions() {
     expenses,
     totalIncome,
     totalBalance,
-    getIncomes,
-    getExpenses,
+    getIncomesByMonth,
+    getExpensesByMonth,
     deleteIncome,
     deleteExpenses,
   } = useGlobalContext();
 
+  const [selectedMonth, setSelectedMonth] = useState("");
+
   useEffect(() => {
-    getIncomes();
-    getExpenses();
-  }, []);
+    getIncomesByMonth(selectedMonth);
+    getExpensesByMonth(selectedMonth);
+  }, [selectedMonth]);
+
+  const handleMonthChange = (e) => {
+    setSelectedMonth(e.target.value);
+  };
 
   return (
     <ViewTransactionsStyled>
@@ -53,6 +59,21 @@ function ViewTransactions() {
         <div className="data">
           <div className="incomes">
             <h2>Income List</h2>
+            <select value={selectedMonth} onChange={handleMonthChange}>
+              <option value="">All Months</option>
+              <option value="January">January</option>
+              <option value="February">February</option>
+              <option value="March">March</option>
+              <option value="April">April</option>
+              <option value="May">May</option>
+              <option value="June">June</option>
+              <option value="July">July</option>
+              <option value="August">August</option>
+              <option value="September">September</option>
+              <option value="October">October</option>
+              <option value="November">November</option>
+              <option value="December">December</option>
+            </select>
             {incomes.map((income) => {
               const { _id, title, amount, date, category, description, type } =
                 income;

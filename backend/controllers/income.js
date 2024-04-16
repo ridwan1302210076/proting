@@ -38,6 +38,7 @@ exports.getIncomes = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
 exports.getIncomeByMonth = async (req, res) => {
   try {
     const { month } = req.params; // get month from parameters
